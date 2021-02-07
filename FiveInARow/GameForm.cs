@@ -47,7 +47,7 @@ namespace FiveInARow {
             board.SetCell(x, y, CellContent.Player);
         }
 
-        public void OnBoardChanged(object sender, EventArgs e) {
+        public void OnBoardChanged() {
             boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
         }
 
