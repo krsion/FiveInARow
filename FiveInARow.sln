@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiveInARow", "FiveInARow\FiveInARow.csproj", "{F713262F-7CEC-4C74-9DD2-7519BD8C60BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F713262F-7CEC-4C74-9DD2-7519BD8C60BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F713262F-7CEC-4C74-9DD2-7519BD8C60BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F713262F-7CEC-4C74-9DD2-7519BD8C60BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F713262F-7CEC-4C74-9DD2-7519BD8C60BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8638ABD-49B6-42D9-9FE8-62506340E363}
+	EndGlobalSection
+EndGlobal
