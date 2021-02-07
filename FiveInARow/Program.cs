@@ -14,7 +14,13 @@ namespace FiveInARow {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GameForm());
+
+
+            Board board = new Board();
+            GameForm gameForm = new GameForm(board);
+            board.Changed += gameForm.OnBoardChanged;
+
+            Application.Run(gameForm);
         }
     }
 }

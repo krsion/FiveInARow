@@ -56,6 +56,7 @@ namespace FiveInARow {
             this.resetButton.TabIndex = 0;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // boardPictureBox
             // 
@@ -78,7 +79,6 @@ namespace FiveInARow {
             this.Controls.Add(this.tableLayoutPanel);
             this.Name = "GameForm";
             this.Text = "Five in a Row";
-            this.Load += new System.EventHandler(this.GameForm_Load);
             this.tableLayoutPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.boardPictureBox)).EndInit();
             this.ResumeLayout(false);
