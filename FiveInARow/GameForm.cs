@@ -11,15 +11,17 @@ using System.Windows.Forms;
 namespace FiveInARow {
     public partial class GameForm : Form {
         private Board board;
+        private Game game;
 
         private Brush emptyBrush = Brushes.LightGray;
         private Brush playerBrush = Brushes.LightPink;
         private Brush botBrush = Brushes.LightBlue;
         private Pen borderPen = Pens.Black;
 
-        public GameForm(Board board) {
+        public GameForm(Board board, Game game) {
             InitializeComponent();
             this.board = board;
+            this.game = game;
         }
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
             PictureBox pb = sender as PictureBox;
@@ -44,7 +46,7 @@ namespace FiveInARow {
             int cellHeight = (pb.Height / 15) + 1;
             int x = e.X / cellWidth;
             int y = e.Y / cellHeight;
-            board.SetCell(x, y, CellContent.Player);
+            game.PlayerMove(x, y);
         }
 
         public void OnBoardChanged() {
@@ -52,7 +54,7 @@ namespace FiveInARow {
         }
 
         private void resetButton_Click(object sender, EventArgs e) {
-            board.Reset();
+            game.Reset();
         }
     }   
 }
