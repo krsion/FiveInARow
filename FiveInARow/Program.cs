@@ -20,6 +20,7 @@ namespace FiveInARow {
             Game game = new Game(board);
             GameForm gameForm = new GameForm(board, game);
             board.Changed += gameForm.OnBoardChanged;
+            game.GameOver += gameForm.OnGameOver;
 
             Application.Run(gameForm);
         }

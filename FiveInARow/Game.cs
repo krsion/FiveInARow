@@ -10,8 +10,11 @@ namespace FiveInARow {
         private bool isGame = true;
 
         private bool CheckForWinner(int x, int y) {
-            return false;
+            return (y==5);
         }
+
+        public event Action GameOver = delegate { };
+
         public Game(Board board) {
             this.board = board;
         }
@@ -22,7 +25,7 @@ namespace FiveInARow {
             isPlayersTurn = false;
             if (CheckForWinner(x,y)) {
                 isGame = false;
-                //TODO: send event to view to draw the line
+                GameOver();
                 return;
             }
             (int X, int Y) botMove = Bot.Move(board);
@@ -32,13 +35,14 @@ namespace FiveInARow {
             isPlayersTurn = true;
             if (CheckForWinner(botMove.X, botMove.Y)) {
                 isGame = false;
-                //TODO: send event to view to draw the line
+                GameOver();
                 return;
             }
         }
 
         public void Reset() {
             board.Reset();
+            isGame = true;
             playerBegins = !playerBegins;
             isPlayersTurn = playerBegins;
             if (playerBegins)

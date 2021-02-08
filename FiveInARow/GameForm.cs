@@ -39,6 +39,13 @@ namespace FiveInARow {
                 }
             }
         }
+        public void OnBoardChanged() {
+            boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
+        }
+
+        public void OnGameOver() {
+            gameOverLabel.Visible = true;
+        }
 
         private void boardPictureBox_MouseClick(object sender, MouseEventArgs e) {
             PictureBox pb = sender as PictureBox;
@@ -49,12 +56,13 @@ namespace FiveInARow {
             game.PlayerMove(x, y);
         }
 
-        public void OnBoardChanged() {
-            boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
-        }
-
         private void resetButton_Click(object sender, EventArgs e) {
             game.Reset();
+            gameOverLabel.Visible = false;
         }
+
+        
+
+        
     }   
 }
