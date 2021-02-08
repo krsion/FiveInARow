@@ -2,15 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 
+public class LineParams {
+    public int Length = 1;
+    public bool PositiveEndOpen = true;
+    public bool NegativeEndOpen = true;
+}
+
 namespace FiveInARow {
     public class Game {
         private Board board;
         private bool playerBegins = true;
         private bool isPlayersTurn = true;
         private bool isGame = true;
+        private readonly int winnerLineLength = 5;
 
         private bool CheckForWinner(int x, int y) {
-            return (y==5);
+            LineParams[] cellParams = CellParams(x, y);
+            foreach (LineParams lineParams in cellParams) {
+                if (lineParams.Length == winnerLineLength)
+                    return true;
+            }
+            return false;
         }
 
         public event Action GameOver = delegate { };
@@ -53,6 +65,51 @@ namespace FiveInARow {
                 board.SetCell(botMove.X, botMove.Y, CellContent.Bot);
             }
             isPlayersTurn = true;
+        }
+
+        public LineParams[] CellParams(int x, int y) {
+            CellContent who = board.GetCell(x, y);
+            LineParams[] lines = new LineParams[4];
+            (int X, int Y)[] mask = { (1, 1), (1, -1), (1, 0), (0, 1) };
+            for (int m = 0; m < 4; m++) {
+                lines[m] = new LineParams();
+                for (int i = 1; i < winnerLineLength; i++) {
+                    (int X, int Y) position = (x + i * mask[m].X, y + i * mask[m].Y);
+                    if (!board.Fits(position.X, position.Y)) {
+                        lines[m].PositiveEndOpen = false;
+                        break;
+                    }
+                    CellContent cell = board.GetCell(position.X, position.Y);
+                    if (cell == CellContent.Empty) {
+                        break;
+                    }
+                    if (cell != who) {
+                        lines[m].PositiveEndOpen = false;
+                        break;
+                    }
+                    lines[m].Length += 1;
+                }
+            }
+
+            for (int m = 0; m < 4; m++) {
+                for (int i = 1; i < winnerLineLength; i++) {
+                    (int X, int Y) position = (x - i * mask[m].X, y - i * mask[m].Y);
+                    if (!board.Fits(position.X, position.Y)) {
+                        lines[m].NegativeEndOpen = false;
+                        break;
+                    }
+                    CellContent cell = board.GetCell(position.X, position.Y);
+                    if (cell == CellContent.Empty) {
+                        break;
+                    }
+                    if (cell != who) {
+                        lines[m].NegativeEndOpen = false;
+                        break;
+                    }
+                    lines[m].Length += 1;
+                }
+            }
+            return lines;
         }
     }
 }

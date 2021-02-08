@@ -28,6 +28,10 @@ namespace FiveInARow {
             return board[x, y];
         }
 
+        public bool Fits(int x, int y) {
+            return (0 <= x && x < Size && 0 <= y && y < Size);
+        }
+
         public void Reset() {
             board = new CellContent[Size, Size];
             Changed();
