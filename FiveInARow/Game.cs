@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-public class LineParams {
-    public int Length = 1;
-    public bool PositiveEndOpen = true;
-    public bool NegativeEndOpen = true;
-}
 
 namespace FiveInARow {
     public class Game {
