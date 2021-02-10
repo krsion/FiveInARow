@@ -80,12 +80,12 @@ namespace FiveInARow {
             foreach (LineParams lineParams in cellParams) {
                 int l = lineParams.Length;
                 int oe = lineParams.OpenEnds;
-                bool nextIsNotWhoseWins = (l == 5) || (l == 4 && oe == 2);
-                bool nextIsWhoseWins = nextIsNotWhoseWins || (l == 4 && oe == 1) || (l == 3 && oe == 2);
-                if (next == CellContent.Player && whoseLine == CellContent.Bot && nextIsNotWhoseWins) return Evaluation.Good;
-                if (next == CellContent.Player && whoseLine == CellContent.Player && nextIsWhoseWins) return Evaluation.Bad;
-                if (next == CellContent.Bot && whoseLine == CellContent.Bot && nextIsWhoseWins) return Evaluation.Good;
-                if (next == CellContent.Bot && whoseLine == CellContent.Player && nextIsNotWhoseWins) return Evaluation.Bad;
+                bool nextIsNotWhoseLineWins = (l == 5) || (l == 4 && oe == 2);
+                bool nextIsWhoseLineWins = nextIsNotWhoseLineWins || (l == 4 && oe == 1) || (l == 3 && oe == 2);
+                if (next == CellContent.Player && whoseLine == CellContent.Bot && nextIsNotWhoseLineWins) return Evaluation.Good;
+                if (next == CellContent.Player && whoseLine == CellContent.Player && nextIsWhoseLineWins) return Evaluation.Bad;
+                if (next == CellContent.Bot && whoseLine == CellContent.Bot && nextIsWhoseLineWins) return Evaluation.Good;
+                if (next == CellContent.Bot && whoseLine == CellContent.Player && nextIsNotWhoseLineWins) return Evaluation.Bad;
             }
             return Evaluation.Neutral;
         }
