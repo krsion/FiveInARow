@@ -17,10 +17,11 @@ namespace FiveInARow {
             var bestEvaluation = Evaluation.Bad;
 
             foreach (Board child in children) {
-                var eval = Minimax(child, 2, true, Evaluation.Bad, Evaluation.Good);
+                var eval = Minimax(child, 3, false, Evaluation.Bad, Evaluation.Good);
                 if (eval >= bestEvaluation) {
                     bestEvaluation = eval;
-                    bestMove = child.LastMove;
+                    bestMove.X = child.LastMove.X;
+                    bestMove.Y = child.LastMove.Y;
                 }
             }
             return (bestMove.X, bestMove.Y);
@@ -72,13 +73,19 @@ namespace FiveInARow {
         }
 
         private static Evaluation EvaluateCell(Board board, int x, int y) {
+            CellContent whoseLine = board.GetCell(x, y);
+            CellContent next = board.LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
+
             LineParams[] cellParams = board.CellParams(x, y);
             foreach (LineParams lineParams in cellParams) {
-                if (lineParams.Length == board.WinnerLineLength || lineParams.Length == board.WinnerLineLength-1 && lineParams.OpenEnds >= 1) {
-                    if (board.GetCell(x, y) == CellContent.Bot)
-                        return Evaluation.Good;
-                    else return Evaluation.Bad;
-                }
+                int l = lineParams.Length;
+                int oe = lineParams.OpenEnds;
+                bool nextIsNotWhoseWins = (l == 5) || (l == 4 && oe == 2);
+                bool nextIsWhoseWins = nextIsNotWhoseWins || (l == 4 && oe == 1) || (l == 3 && oe == 2);
+                if (next == CellContent.Player && whoseLine == CellContent.Bot && nextIsNotWhoseWins) return Evaluation.Good;
+                if (next == CellContent.Player && whoseLine == CellContent.Player && nextIsWhoseWins) return Evaluation.Bad;
+                if (next == CellContent.Bot && whoseLine == CellContent.Bot && nextIsWhoseWins) return Evaluation.Good;
+                if (next == CellContent.Bot && whoseLine == CellContent.Player && nextIsNotWhoseWins) return Evaluation.Bad;
             }
             return Evaluation.Neutral;
         }
