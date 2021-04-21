@@ -8,8 +8,8 @@ namespace FiveInARow {
         private Game game;
 
         private Brush emptyBrush = Brushes.LightGray;
-        private Brush playerBrush = Brushes.LightPink;
-        private Brush botBrush = Brushes.LightBlue;
+        private Pen playerPen = new Pen(Brushes.Red, 2);
+        private Pen botPen = new Pen(Brushes.Blue, 2);
         private Pen borderPen = Pens.Black;
 
         public GameForm(Board board, Game game) {
@@ -18,23 +18,41 @@ namespace FiveInARow {
             this.game = game;
         }
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
+            if (board.LastMove.Who == CellContent.Player) Cursor = Cursors.WaitCursor;
+            if (board.LastMove.Who == CellContent.Bot) Cursor = Cursors.Arrow;
             PictureBox pb = sender as PictureBox;
             int cellWidth = pb.Width / 15;
             int cellHeight = pb.Height / 15;
             Graphics g = e.Graphics;
             for (int i = 0; i < 15; i++) {
                 for (int j = 0; j < 15; j++) {
-                    Rectangle rect = new Rectangle(i * (cellWidth + 1), j * (cellHeight + 1), cellWidth, cellHeight);
+                    int left = i * (cellWidth + 1);
+                    int right = left + cellWidth;
+                    int top = j * (cellHeight + 1);
+                    int bottom = top + cellHeight;
+                    Rectangle rect = new Rectangle(left, top, cellWidth, cellHeight);
                     g.DrawRectangle(borderPen, rect);
+                    
                     CellContent c = board.GetCell(i, j);
-                    if (c == CellContent.Empty) g.FillRectangle(emptyBrush, rect);
-                    if (c == CellContent.Player) g.FillRectangle(playerBrush, rect);
-                    if (c == CellContent.Bot) g.FillRectangle(botBrush, rect);
+                    g.FillRectangle(emptyBrush, rect);
+                    if (i == board.LastMove.X && j == board.LastMove.Y && board.LastMove.Who != CellContent.Empty) {
+                        g.FillRectangle(Brushes.LightYellow, rect);
+                    }
+                    if (c == CellContent.Player) {
+                        g.DrawLine(playerPen, left, top, right, bottom);
+                        g.DrawLine(playerPen, left, bottom, right, top);
+                    }
+                    if (c == CellContent.Bot) {
+                        g.DrawEllipse(botPen, rect);
+                    }
+                    
                 }
             }
         }
         public void OnBoardChanged() {
             boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
+            
+
         }
 
         public void OnGameOver() {
@@ -53,6 +71,10 @@ namespace FiveInARow {
         private void resetButton_Click(object sender, EventArgs e) {
             game.Reset();
             gameOverLabel.Visible = false;
+        }
+
+        private void gameOverLabel_Click(object sender, EventArgs e) {
+
         }
     }   
 }

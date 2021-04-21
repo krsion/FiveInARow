@@ -52,11 +52,12 @@ namespace FiveInARow {
             // resetButton
             // 
             this.resetButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resetButton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.resetButton.Location = new System.Drawing.Point(724, 3);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(175, 132);
             this.resetButton.TabIndex = 0;
-            this.resetButton.Text = "Reset";
+            this.resetButton.Text = "RESET";
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
@@ -87,6 +88,7 @@ namespace FiveInARow {
             this.gameOverLabel.Text = "GAME OVER";
             this.gameOverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.gameOverLabel.Visible = false;
+            this.gameOverLabel.Click += new System.EventHandler(this.gameOverLabel_Click);
             // 
             // GameForm
             // 
