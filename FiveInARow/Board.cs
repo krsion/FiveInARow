@@ -59,10 +59,11 @@ namespace FiveInARow {
         }
 
         public object Clone() {
-            Board result = new Board();
-            result.board = board.Clone() as CellContent[,];
-            result.LastMove = LastMove;
-            result.fullCellCount = fullCellCount;
+            Board result = new Board {
+                board = board.Clone() as CellContent[,],
+                LastMove = LastMove,
+                fullCellCount = fullCellCount
+            };
             return result;
         }
 
@@ -73,12 +74,12 @@ namespace FiveInARow {
             for (int m = 0; m < 4; m++) {
                 lines[m] = new LineParams();
                 for (int i = 1; i < WinnerLineLength; i++) {
-                    (int X, int Y) position = (x + i * mask[m].X, y + i * mask[m].Y);
-                    if (!Fits(position.X, position.Y)) {
+                    (int X, int Y) = (x + i * mask[m].X, y + i * mask[m].Y);
+                    if (!Fits(X, Y)) {
                         lines[m].OpenEnds -= 1;
                         break;
                     }
-                    CellContent cell = GetCell(position.X, position.Y);
+                    CellContent cell = GetCell(X, Y);
                     if (cell == CellContent.Empty) {
                         break;
                     }
@@ -127,9 +128,9 @@ namespace FiveInARow {
 
         private bool IsCellAdjacent(int x, int y) {
             (int X, int Y)[] mask = { (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1) };
-            foreach (var m in mask) {
-                int newX = x + m.X;
-                int newY = y + m.Y;
+            foreach (var (X, Y) in mask) {
+                int newX = x + X;
+                int newY = y + Y;
                 if (Fits(newX, newY) && GetCell(newX, newY) != CellContent.Empty) {
                     return true;
                 }

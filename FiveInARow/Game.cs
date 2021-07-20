@@ -51,9 +51,9 @@ namespace FiveInARow {
             if (playerBegins)
                 return;
 
-            (int X, int Y) botMove = Bot.Move(board);
-            if (board.GetCell(botMove.X, botMove.Y) == CellContent.Empty) {
-                board.SetCell(botMove.X, botMove.Y, CellContent.Bot);
+            (int X, int Y) = Bot.Move(board);
+            if (board.GetCell(X, Y) == CellContent.Empty) {
+                board.SetCell(X, Y, CellContent.Bot);
             }
             isPlayersTurn = true;
         }
