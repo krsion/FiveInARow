@@ -2,54 +2,64 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace FiveInARow {
-    /// <summary>
-    /// View layer of the game
-    /// </summary>
+namespace Gomoku {
+    
     public partial class GameForm : Form {
+        public class ColorSettings {
+            public Brush EmptyBrush { get; set; }
+            public Pen PlayerPen { get; set; }
+            public Pen BotPen { get; set; }
+            public Pen CellBorderPen { get; set; }
+            public Brush LastMove { get; set; }
+        }
+
         private BoardState board;
         private Game game;
+        private ColorSettings colorSettings;
 
-        private Brush emptyBrush = Brushes.LightGray;
-        private Pen playerPen = new Pen(Brushes.Red, 2);
-        private Pen botPen = new Pen(Brushes.Blue, 2);
-        private Pen borderPen = Pens.Black;
-
-        public GameForm(BoardState board, Game game) {
+        public GameForm(BoardState board, Game game, ColorSettings colorSettings) {
             InitializeComponent();
             this.board = board;
             this.game = game;
+            this.colorSettings = colorSettings;
         }
         /// <summary>
         /// Rendering of the board
         /// </summary>
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
+            // setting up cursor
             if (board.LastMove.Who == CellContent.Player) Cursor = Cursors.WaitCursor;
             if (board.LastMove.Who == CellContent.Bot) Cursor = Cursors.Arrow;
-            PictureBox pb = sender as PictureBox;
-            int cellWidth = pb.Width / 15;
-            int cellHeight = pb.Height / 15;
-            Graphics g = e.Graphics;
-            for (int i = 0; i < 15; i++) {
-                for (int j = 0; j < 15; j++) {
+
+            PictureBox pictureBox = sender as PictureBox;
+            int cellWidth = pictureBox.Width / board.Size;
+            int cellHeight = pictureBox.Height / board.Size;
+            Graphics graphics = e.Graphics;
+            for (int i = 0; i < board.Size; i++) {
+                for (int j = 0; j < board.Size; j++) {
+                    // calculating coordinates of the cell
                     int left = i * (cellWidth + 1);
                     int right = left + cellWidth;
                     int top = j * (cellHeight + 1);
                     int bottom = top + cellHeight;
-                    Rectangle rect = new Rectangle(left, top, cellWidth, cellHeight);
-                    g.DrawRectangle(borderPen, rect);
-                    
-                    CellContent c = board.GetCellsContentAtPosition(i, j);
-                    g.FillRectangle(emptyBrush, rect);
+
+                    // drawing empty cell
+                    Rectangle rectangle = new Rectangle(left, top, cellWidth, cellHeight);
+                    graphics.DrawRectangle(colorSettings.CellBorderPen, rectangle);
+                    graphics.FillRectangle(colorSettings.EmptyBrush, rectangle);
+
+                    // highlighting last move
                     if (i == board.LastMove.X && j == board.LastMove.Y && board.LastMove.Who != CellContent.Empty) {
-                        g.FillRectangle(Brushes.LightYellow, rect);
+                        graphics.FillRectangle(colorSettings.LastMove, rectangle);
                     }
-                    if (c == CellContent.Player) {
-                        g.DrawLine(playerPen, left, top, right, bottom);
-                        g.DrawLine(playerPen, left, bottom, right, top);
+                    // drawing cells content
+                    CellContent cellContent = board.GetCellsContentAtPosition(i, j);
+                    if (cellContent == CellContent.Player) { // player has a cross
+                        graphics.DrawLine(colorSettings.PlayerPen, left, top, right, bottom);
+                        graphics.DrawLine(colorSettings.PlayerPen, left, bottom, right, top);
                     }
-                    if (c == CellContent.Bot) {
-                        g.DrawEllipse(botPen, rect);
+                    if (cellContent == CellContent.Bot) { // bot has a circle
+                        graphics.DrawEllipse(colorSettings.BotPen, rectangle);
                     }
                     
                 }
@@ -64,9 +74,9 @@ namespace FiveInARow {
         }
 
         private void boardPictureBox_MouseClick(object sender, MouseEventArgs e) {
-            PictureBox pb = sender as PictureBox;
-            int cellWidth = (pb.Width / 15) + 1;
-            int cellHeight = (pb.Height / 15) + 1;
+            PictureBox pictureBox = sender as PictureBox;
+            int cellWidth = (pictureBox.Width / board.Size) + 1;
+            int cellHeight = (pictureBox.Height / board.Size) + 1;
             int x = e.X / cellWidth;
             int y = e.Y / cellHeight;
             game.PlayerMove(x, y);
@@ -75,10 +85,6 @@ namespace FiveInARow {
         private void resetButton_Click(object sender, EventArgs e) {
             game.Reset();
             gameOverLabel.Visible = false;
-        }
-
-        private void gameOverLabel_Click(object sender, EventArgs e) {
-
         }
     }   
 }

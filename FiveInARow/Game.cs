@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FiveInARow {
+namespace Gomoku {
 
     /// <summary>
     /// Controller class containing game logic.

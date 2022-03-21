@@ -1,5 +1,5 @@
 ﻿
-namespace FiveInARow {
+namespace Gomoku {
     partial class GameForm {
         /// <summary>
         ///  Required designer variable.
@@ -88,7 +88,6 @@ namespace FiveInARow {
             this.gameOverLabel.Text = "GAME OVER";
             this.gameOverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.gameOverLabel.Visible = false;
-            this.gameOverLabel.Click += new System.EventHandler(this.gameOverLabel_Click);
             // 
             // GameForm
             // 

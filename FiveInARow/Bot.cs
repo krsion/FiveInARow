@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FiveInARow {
+namespace Gomoku {
 
     static class Evaluation {
         public static int Win = int.MaxValue;
