@@ -9,10 +9,13 @@ namespace FiveInARow {
     }
 
     class Bot {
-        
+        /// <summary>
+        /// Given the state of the game, calculates which move would be best for the bot to win and returns the coordinates where the bot wants to place it's symbol. 
+        /// </summary>
+        /// <param name="board">To which board to add bot's symbol</param>
+        /// <returns>Returns coordianates where bot wants to place it's symbol</returns>
         public static (int,int) Move(Board board) {
             var children = board.AdjacentChildren();
-
             if (children.Count == 0) {
                 return (board.Size / 2, board.Size / 2);
             }
@@ -31,7 +34,16 @@ namespace FiveInARow {
             return (bestMove.X, bestMove.Y);
         }
 
-        private static int Minimax(Board board, int depth, bool maxing, int alpha, int beta) {
+        /// <summary>
+        /// Implementation of alpha-beta pruning minimax algorithm.
+        /// </summary>
+        /// <param name="board">Current state of the board</param>
+        /// <param name="depth">How many steps ahead should the minimax algorithm search </param>
+        /// <param name="maximizingPlayer">If true, we are looking for the best player's move, if false, we are searching for the best bot's move.</param>
+        /// <param name="alpha">Minimum guaranteed score of the maximizing player. If greater than beta, no need to search anymore.</param>
+        /// <param name="beta">Maximum guaranteed score of the minimizing player. If smaller than alpha, no need to search anymore.</param>
+        /// <returns>If maxing, returns the highest reachable evaluation. If not maxing, returns the lowest reachable evaluation.</returns>
+        private static int Minimax(Board board, int depth, bool maximizingPlayer, int alpha, int beta) {
             if (board.LastMove.Who != CellContent.Empty) {
                 int cellEval = EvaluateCell(board, board.LastMove.X, board.LastMove.Y);
                 if (cellEval == Evaluation.Loss || cellEval == Evaluation.Win) {
@@ -44,64 +56,78 @@ namespace FiveInARow {
 
             var children = board.AdjacentChildren();
 
-            if (maxing) {
-                int eval = Evaluation.Loss;
+            if (maximizingPlayer) {
+                int evaluation = Evaluation.Loss;
                 foreach (Board child in children) {
-                    eval = Math.Max((int)eval, (int)Minimax(child, depth - 1, false, alpha, beta));
-                    alpha = Math.Max((int)alpha, (int)eval);
-                    if (alpha > beta)
+                    evaluation = Math.Max(evaluation, Minimax(child, depth - 1, false, alpha, beta));
+                    alpha = Math.Max(alpha, evaluation);
+                    if (alpha > beta) {
                         break;
+                    }
                 }
-                return eval;
+                return evaluation;
             } else {
-                int eval = Evaluation.Win;
+                int evaluation = Evaluation.Win;
                 foreach (Board child in children) {
-                    eval = Math.Min((int)eval, (int)Minimax(child, depth - 1, true, alpha, beta));
-                    alpha = Math.Min((int)beta, (int)eval);
-                    if (alpha > beta)
+                    evaluation = Math.Min(evaluation, Minimax(child, depth - 1, true, alpha, beta));
+                    alpha = Math.Min(beta, evaluation);
+                    if (alpha > beta) {
                         break;
+                    }
                 }
-                return eval;
+                return evaluation;
             }
         }
 
+        /// <summary>
+        /// Returns how good given game state is from bot's perspective.
+        /// </summary>
+        /// <param name="board">Gomoku board state to evaluate</param>
+        /// <returns>Returns evaluation of given game state.</returns>
         private static int EvaluateBoard(Board board) {
-            int eval = 0;
+            int evaluation = 0;
 
             for (int i = 0; i < board.Size; i++)
                 for (int j = 0; j < board.Size; j++)
                     if (board.GetCell(i, j) != CellContent.Empty) {
-                        int cellEval = EvaluateCell(board, i, j);
-                        if (cellEval == Evaluation.Loss || cellEval == Evaluation.Win) {
-                            return cellEval;
+                        int cellEvaluation = EvaluateCell(board, i, j);
+                        if (cellEvaluation == Evaluation.Loss || cellEvaluation == Evaluation.Win) {
+                            return cellEvaluation;
                         }
-                        eval += cellEval;
+                        evaluation += cellEvaluation;
                     }
-            return eval;
+            return evaluation;
         }
 
+        /// <summary>
+        /// Given the game board and one position in it, returns how much it contributes to bot's win. It is constant time O(1) evaluation of the position and does not do any search.
+        /// </summary>
+        /// <param name="board">Current state of the game board</param>
+        /// <param name="x">X coordinate of the evaluated position</param>
+        /// <param name="y">Y coordinate of the evaluated position</param>
+        /// <returns>How much given position contributes to bot winning (or losing, if negative)</returns>
         private static int EvaluateCell(Board board, int x, int y) {
             CellContent whoseLine = board.GetCell(x, y);
             CellContent next = board.LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
 
-            int eval = 0;
+            int evaluation = 0;
 
-            LineParams[] cellParams = board.CellParams(x, y);
-            foreach (LineParams lineParams in cellParams) {
-                int l = lineParams.Length;
-                int oe = lineParams.OpenEnds;
-                bool nextIsNotWhoseLineWins = (l == 5) || (l == 4 && oe == 2);
-                bool nextIsWhoseLineWins = nextIsNotWhoseLineWins || (l == 4 && oe == 1) || (l == 3 && oe == 2);
+            LineParams[] cellsLineParams = board.CellParams(x, y);
+            foreach (LineParams lineParams in cellsLineParams) {
+                int length = lineParams.Length;
+                int openEnds = lineParams.OpenEnds;
+                bool nextIsNotWhoseLineWins = (length == 5) || (length == 4 && openEnds == 2);
+                bool nextIsWhoseLineWins = nextIsNotWhoseLineWins || (length == 4 && openEnds == 1) || (length == 3 && openEnds == 2);
                 if (next == CellContent.Player && whoseLine == CellContent.Bot && nextIsNotWhoseLineWins) return Evaluation.Win;
                 if (next == CellContent.Player && whoseLine == CellContent.Player && nextIsWhoseLineWins) return Evaluation.Loss;
                 if (next == CellContent.Bot && whoseLine == CellContent.Bot && nextIsWhoseLineWins) return Evaluation.Win;
                 if (next == CellContent.Bot && whoseLine == CellContent.Player && nextIsNotWhoseLineWins) return Evaluation.Loss;
 
                 int coefficient = next == CellContent.Bot ? 1 : -1;
-                eval += (int)Math.Pow(2, l*oe) * coefficient;
+                evaluation += (int)Math.Pow(2, length*openEnds) * coefficient;
 
             }
-            return eval;
+            return evaluation;
         }
     }
 }
