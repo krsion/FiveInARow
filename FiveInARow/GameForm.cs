@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Windows.Forms;
 
 namespace FiveInARow {
+    /// <summary>
+    /// View layer of the game
+    /// </summary>
     public partial class GameForm : Form {
         private BoardState board;
         private Game game;
@@ -17,6 +20,9 @@ namespace FiveInARow {
             this.board = board;
             this.game = game;
         }
+        /// <summary>
+        /// Rendering of the board
+        /// </summary>
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
             if (board.LastMove.Who == CellContent.Player) Cursor = Cursors.WaitCursor;
             if (board.LastMove.Who == CellContent.Bot) Cursor = Cursors.Arrow;
@@ -51,8 +57,6 @@ namespace FiveInARow {
         }
         public void OnBoardChanged() {
             boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
-            
-
         }
 
         public void OnGameOver() {
