@@ -19,8 +19,8 @@ namespace FiveInARow {
     /// Representation of Gomoku game board state.
     /// Contains each cell's content, who's turn it is and where is the last move.
     /// </summary>
-    public class GomokuBoardState : ICloneable{
-        public GomokuBoardState() {
+    public class BoardState : ICloneable{
+        public BoardState() {
             board = new CellContent[Size, Size];
             LastMove = (0, 0, CellContent.Empty);
             Changed();
@@ -81,7 +81,7 @@ namespace FiveInARow {
         /// Returns a deep copy of the board.
         /// </summary>
         public object Clone() {
-            GomokuBoardState result = new GomokuBoardState {
+            BoardState result = new BoardState {
                 board = board.Clone() as CellContent[,],
                 LastMove = LastMove,
                 fullCellCount = fullCellCount
@@ -139,14 +139,14 @@ namespace FiveInARow {
         /// Returns all possibilities what the next state may be. 
         /// Considers moves only to cells that have a nonempty neighbour to make the state space smaller.
         /// </summary>
-        public List<GomokuBoardState> AdjacentChildren() {
-            List<GomokuBoardState> children = new List<GomokuBoardState>();
+        public List<BoardState> AdjacentChildren() {
+            List<BoardState> children = new List<BoardState>();
             CellContent next = LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
 
             for (int i = 0; i < Size; i++) {
                 for (int j = 0; j < Size; j++) {
                     if (GetCellsContentAtPosition(i, j) == CellContent.Empty && HasCellAnyNeighbor(i, j)) {
-                        GomokuBoardState child = Clone() as GomokuBoardState;
+                        BoardState child = Clone() as BoardState;
                         child.SetCell(i, j, next);
                         children.Add(child);
                     }

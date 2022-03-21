@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FiveInARow {
     public partial class GameForm : Form {
-        private GomokuBoardState board;
+        private BoardState board;
         private Game game;
 
         private Brush emptyBrush = Brushes.LightGray;
@@ -12,7 +12,7 @@ namespace FiveInARow {
         private Pen botPen = new Pen(Brushes.Blue, 2);
         private Pen borderPen = Pens.Black;
 
-        public GameForm(GomokuBoardState board, Game game) {
+        public GameForm(BoardState board, Game game) {
             InitializeComponent();
             this.board = board;
             this.game = game;

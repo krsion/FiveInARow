@@ -17,7 +17,7 @@ namespace FiveInARow {
         /// </summary>
         /// <param name="board">To which board to add bot's symbol</param>
         /// <returns>Returns coordianates where bot wants to place it's symbol</returns>
-        public static (int,int) Move(GomokuBoardState board) {
+        public static (int,int) Move(BoardState board) {
             var children = board.AdjacentChildren();
             if (children.Count == 0) {
                 return (board.Size / 2, board.Size / 2);
@@ -26,7 +26,7 @@ namespace FiveInARow {
             var bestMove = board.LastMove;
             var bestEvaluation = Evaluation.Loss;
 
-            foreach (GomokuBoardState child in children) {
+            foreach (BoardState child in children) {
                 var eval = Minimax(child, 3, false, Evaluation.Loss, Evaluation.Win);
                 if (eval >= bestEvaluation) {
                     bestEvaluation = eval;
@@ -46,7 +46,7 @@ namespace FiveInARow {
         /// <param name="alpha">Minimum guaranteed score of the maximizing player. If greater than beta, no need to search anymore.</param>
         /// <param name="beta">Maximum guaranteed score of the minimizing player. If smaller than alpha, no need to search anymore.</param>
         /// <returns>If maxing, returns the highest reachable evaluation. If not maxing, returns the lowest reachable evaluation.</returns>
-        private static int Minimax(GomokuBoardState board, int depth, bool maximizingPlayer, int alpha, int beta) {
+        private static int Minimax(BoardState board, int depth, bool maximizingPlayer, int alpha, int beta) {
             if (board.LastMove.Who != CellContent.Empty) {
                 int cellEval = EvaluateCell(board, board.LastMove.X, board.LastMove.Y);
                 if (cellEval == Evaluation.Loss || cellEval == Evaluation.Win) {
@@ -61,7 +61,7 @@ namespace FiveInARow {
 
             if (maximizingPlayer) {
                 int evaluation = Evaluation.Loss;
-                foreach (GomokuBoardState child in children) {
+                foreach (BoardState child in children) {
                     evaluation = Math.Max(evaluation, Minimax(child, depth - 1, false, alpha, beta));
                     alpha = Math.Max(alpha, evaluation);
                     if (alpha > beta) {
@@ -71,7 +71,7 @@ namespace FiveInARow {
                 return evaluation;
             } else {
                 int evaluation = Evaluation.Win;
-                foreach (GomokuBoardState child in children) {
+                foreach (BoardState child in children) {
                     evaluation = Math.Min(evaluation, Minimax(child, depth - 1, true, alpha, beta));
                     alpha = Math.Min(beta, evaluation);
                     if (alpha > beta) {
@@ -87,7 +87,7 @@ namespace FiveInARow {
         /// </summary>
         /// <param name="board">Gomoku board state to evaluate</param>
         /// <returns>Returns evaluation of given game state.</returns>
-        private static int EvaluateBoard(GomokuBoardState board) {
+        private static int EvaluateBoard(BoardState board) {
             int evaluation = 0;
 
             for (int i = 0; i < board.Size; i++)
@@ -109,7 +109,7 @@ namespace FiveInARow {
         /// <param name="x">X coordinate of the evaluated position</param>
         /// <param name="y">Y coordinate of the evaluated position</param>
         /// <returns>How much given position contributes to bot winning (or losing, if negative)</returns>
-        private static int EvaluateCell(GomokuBoardState board, int x, int y) {
+        private static int EvaluateCell(BoardState board, int x, int y) {
             CellContent whoseLine = board.GetCellsContentAtPosition(x, y);
             CellContent next = board.LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
 
