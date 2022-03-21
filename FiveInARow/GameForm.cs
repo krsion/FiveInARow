@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FiveInARow {
     public partial class GameForm : Form {
-        private Board board;
+        private GomokuBoardState board;
         private Game game;
 
         private Brush emptyBrush = Brushes.LightGray;
@@ -12,7 +12,7 @@ namespace FiveInARow {
         private Pen botPen = new Pen(Brushes.Blue, 2);
         private Pen borderPen = Pens.Black;
 
-        public GameForm(Board board, Game game) {
+        public GameForm(GomokuBoardState board, Game game) {
             InitializeComponent();
             this.board = board;
             this.game = game;
@@ -33,7 +33,7 @@ namespace FiveInARow {
                     Rectangle rect = new Rectangle(left, top, cellWidth, cellHeight);
                     g.DrawRectangle(borderPen, rect);
                     
-                    CellContent c = board.GetCell(i, j);
+                    CellContent c = board.GetCellsContentAtPosition(i, j);
                     g.FillRectangle(emptyBrush, rect);
                     if (i == board.LastMove.X && j == board.LastMove.Y && board.LastMove.Who != CellContent.Empty) {
                         g.FillRectangle(Brushes.LightYellow, rect);

@@ -2,13 +2,13 @@
 
 namespace FiveInARow {
     public class Game {
-        private Board board;
+        private GomokuBoardState board;
         private bool playerBegins = true;
         private bool isPlayersTurn = true;
         private bool isGame = true;
 
         public bool CheckForWinner(int x, int y) {
-            LineParams[] cellParams = board.CellParams(x, y);
+            LineParams[] cellParams = board.CellsLineParams(x, y);
             foreach (LineParams lineParams in cellParams) {
                 if (lineParams.Length == board.WinnerLineLength)
                     return true;
@@ -18,11 +18,11 @@ namespace FiveInARow {
 
         public event Action GameOver = delegate { };
 
-        public Game(Board board) {
+        public Game(GomokuBoardState board) {
             this.board = board;
         }
         public void PlayerMove(int x, int y) {
-            if (!isGame || !isPlayersTurn || board.GetCell(x, y) != CellContent.Empty) 
+            if (!isGame || !isPlayersTurn || board.GetCellsContentAtPosition(x, y) != CellContent.Empty) 
                 return;
             board.SetCell(x, y, CellContent.Player);
             isPlayersTurn = false;
@@ -32,7 +32,7 @@ namespace FiveInARow {
                 return;
             }
             (int X, int Y) botMove = Bot.Move(board);
-            if (board.GetCell(botMove.X, botMove.Y) == CellContent.Empty) {
+            if (board.GetCellsContentAtPosition(botMove.X, botMove.Y) == CellContent.Empty) {
                 board.SetCell(botMove.X, botMove.Y, CellContent.Bot);
             }
             isPlayersTurn = true;
@@ -52,7 +52,7 @@ namespace FiveInARow {
                 return;
 
             (int X, int Y) = Bot.Move(board);
-            if (board.GetCell(X, Y) == CellContent.Empty) {
+            if (board.GetCellsContentAtPosition(X, Y) == CellContent.Empty) {
                 board.SetCell(X, Y, CellContent.Bot);
             }
             isPlayersTurn = true;

@@ -16,7 +16,7 @@ namespace FiveInARow {
             Application.SetCompatibleTextRenderingDefault(false);
 
 
-            Board board = new Board();
+            GomokuBoardState board = new GomokuBoardState();
             Game game = new Game(board);
             GameForm gameForm = new GameForm(board, game);
             board.Changed += gameForm.OnBoardChanged;
