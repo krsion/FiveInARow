@@ -22,8 +22,8 @@ namespace Gomoku {
             Game game = new Game(board, bot);
             GameForm.ColorSettings colorSettings = new GameForm.ColorSettings() {
                 EmptyBrush = Brushes.LightGray,
-                PlayerPen = new Pen(Brushes.Red, 2),
-                BotPen = new Pen(Brushes.Blue, 2),
+                PlayerXPen = new Pen(Brushes.Red, 2),
+                PlayerOPen = new Pen(Brushes.Blue, 2),
                 CellBorderPen = Pens.Black,
                 LastMove = Brushes.LightYellow
 

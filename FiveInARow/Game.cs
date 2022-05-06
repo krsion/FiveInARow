@@ -8,9 +8,10 @@ namespace Gomoku {
     public class Game {
         private BoardState board;
         private Bot bot;
-        private bool playerBegins = true;
-        private bool isPlayersTurn = true;
+        private bool xBegins = true;
+        private bool isXsTurn = true;
         private bool isGame = true;
+        private bool isPlayerVsPlayer = false;
 
         /// <summary>
         /// Checks if given position is in a winning line.
@@ -34,26 +35,38 @@ namespace Gomoku {
         /// <summary>
         /// Given player's choice of coordinates where to place their symbol, makes sure it's valid, saves the move and lets the bot play or ends the game.
         /// </summary>
-        public void PlayerMove(Position position) {
-            if (!isGame || !isPlayersTurn || board.GetCellsContentAtPosition(position) != CellContent.Empty) 
-                return;
-            board.SetCell(position, CellContent.Player);
-            isPlayersTurn = false;
-            if (CheckForWinner(position)) {
-                isGame = false;
-                GameOver();
-                return;
+        public void Move(Position position) {
+            if (!isGame || board.GetCellsContentAtPosition(position) != CellContent.Empty) return;
+            if (isPlayerVsPlayer) {
+                if (isXsTurn) {
+                    board.SetCell(position, CellContent.X);
+                } else {
+                    board.SetCell(position, CellContent.O);
+                }
+                isXsTurn = !isXsTurn;
+
+                if (CheckForWinner(position)) {
+                    isGame = false;
+                    GameOver();
+                    return;
+                }
+            } else {
+                if (!isXsTurn) return;
+                board.SetCell(position, CellContent.X);
+                if (CheckForWinner(position)) {
+                    isGame = false;
+                    GameOver();
+                    return;
+                }
+
+                Position botMove = bot.Move(board);
+                board.SetCell(botMove, CellContent.O);
+                if (CheckForWinner(botMove)) {
+                    isGame = false;
+                    GameOver();
+                    return;
+                }
             }
-            Position botMove = bot.Move(board);
-            if (board.GetCellsContentAtPosition(botMove) == CellContent.Empty) {
-                board.SetCell(botMove, CellContent.Bot);
-            }
-            if (CheckForWinner(botMove)) {
-                isGame = false;
-                GameOver();
-                return;
-            }
-            isPlayersTurn = true;
         }
 
         /// <summary>
@@ -62,16 +75,26 @@ namespace Gomoku {
         public void Reset() {
             board.Reset();
             isGame = true;
-            playerBegins = !playerBegins;
-            isPlayersTurn = playerBegins;
-            if (playerBegins)
+            xBegins = !xBegins;
+            isXsTurn = xBegins;
+            if (xBegins)
                 return;
-
-            Position position = bot.Move(board);
-            if (board.GetCellsContentAtPosition(position) == CellContent.Empty) {
-                board.SetCell(position, CellContent.Bot);
+            if (!isPlayerVsPlayer) {
+                Position position = bot.Move(board);
+                board.SetCell(position, CellContent.O);
+                isXsTurn = true;
             }
-            isPlayersTurn = true;
+        }
+
+        internal void PlayerVsBot() {
+            isPlayerVsPlayer = false;
+            Reset();
+            
+        }
+
+        internal void PlayerVsPlayer() {
+            isPlayerVsPlayer = true;
+            Reset();
         }
     }
 }

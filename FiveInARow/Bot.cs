@@ -142,7 +142,7 @@ namespace Gomoku {
         /// <returns>How much given position contributes to bot winning (or losing, if negative)</returns>
         private int EvaluateCell(BoardState board, Position position) {
             CellContent whoseLine = board.GetCellsContentAtPosition(position);
-            CellContent next = board.LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
+            CellContent next = board.LastMove.Who == CellContent.O ? CellContent.X : CellContent.O;
 
             int evaluation = 0;
 
@@ -152,12 +152,12 @@ namespace Gomoku {
                 int openEnds = lineParams.OpenEnds;
                 bool nextIsNotWhoseLineWins = (length == 5) || (length == 4 && openEnds == 2);
                 bool nextIsWhoseLineWins = nextIsNotWhoseLineWins || (length == 4 && openEnds == 1) || (length == 3 && openEnds == 2);
-                if (next == CellContent.Player && whoseLine == CellContent.Bot && nextIsNotWhoseLineWins) return Evaluation.Win;
-                if (next == CellContent.Player && whoseLine == CellContent.Player && nextIsWhoseLineWins) return Evaluation.Loss;
-                if (next == CellContent.Bot && whoseLine == CellContent.Bot && nextIsWhoseLineWins) return Evaluation.Win;
-                if (next == CellContent.Bot && whoseLine == CellContent.Player && nextIsNotWhoseLineWins) return Evaluation.Loss;
+                if (next == CellContent.X && whoseLine == CellContent.O && nextIsNotWhoseLineWins) return Evaluation.Win;
+                if (next == CellContent.X && whoseLine == CellContent.X && nextIsWhoseLineWins) return Evaluation.Loss;
+                if (next == CellContent.O && whoseLine == CellContent.O && nextIsWhoseLineWins) return Evaluation.Win;
+                if (next == CellContent.O && whoseLine == CellContent.X && nextIsNotWhoseLineWins) return Evaluation.Loss;
 
-                int coefficient = next == CellContent.Bot ? 1 : -1;
+                int coefficient = next == CellContent.O ? 1 : -1;
                 evaluation += (int)Math.Pow(2, length*openEnds) * coefficient;
 
             }

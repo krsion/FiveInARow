@@ -7,8 +7,8 @@ namespace Gomoku {
     public partial class GameForm : Form {
         public class ColorSettings {
             public Brush EmptyBrush { get; set; }
-            public Pen PlayerPen { get; set; }
-            public Pen BotPen { get; set; }
+            public Pen PlayerXPen { get; set; }
+            public Pen PlayerOPen { get; set; }
             public Pen CellBorderPen { get; set; }
             public Brush LastMove { get; set; }
         }
@@ -32,8 +32,8 @@ namespace Gomoku {
         /// </summary>
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
             // setting up cursor
-            if (board.LastMove.Who == CellContent.Player) Cursor = Cursors.WaitCursor;
-            if (board.LastMove.Who == CellContent.Bot) Cursor = Cursors.Arrow;
+            if (board.LastMove.Who == CellContent.X && radioButtonPvB.Checked) Cursor = Cursors.WaitCursor;
+            else Cursor = Cursors.Arrow;
 
             PictureBox pictureBox = sender as PictureBox;
             int cellWidth = pictureBox.Width / board.Size;
@@ -60,12 +60,12 @@ namespace Gomoku {
                     }
                     // drawing cells content
                     CellContent cellContent = board.GetCellsContentAtPosition(position);
-                    if (cellContent == CellContent.Player) { // player has a cross
-                        graphics.DrawLine(colorSettings.PlayerPen, left, top, right, bottom);
-                        graphics.DrawLine(colorSettings.PlayerPen, left, bottom, right, top);
+                    if (cellContent == CellContent.X) { // player has a cross
+                        graphics.DrawLine(colorSettings.PlayerXPen, left, top, right, bottom);
+                        graphics.DrawLine(colorSettings.PlayerXPen, left, bottom, right, top);
                     }
-                    if (cellContent == CellContent.Bot) { // bot has a circle
-                        graphics.DrawEllipse(colorSettings.BotPen, rectangle);
+                    if (cellContent == CellContent.O) { // bot has a circle
+                        graphics.DrawEllipse(colorSettings.PlayerOPen, rectangle);
                     }
                     
                 }
@@ -86,7 +86,7 @@ namespace Gomoku {
             int cellHeight = (pictureBox.Height / board.Size) + 1;
             int x = e.X / cellWidth;
             int y = e.Y / cellHeight;
-            game.PlayerMove(new Position(x, y));
+            game.Move(new Position(x, y));
         }
 
         private void resetButton_Click(object sender, EventArgs e) {
@@ -95,15 +95,29 @@ namespace Gomoku {
         }
 
         private void hardRadioButton_CheckedChanged(object sender, EventArgs e) {
-            bot.changeDifficulty(Bot.Difficulty.Hard);
+            if (hardRadioButton.Checked) bot.changeDifficulty(Bot.Difficulty.Hard);
         }
 
         private void mediumRadioButton_CheckedChanged(object sender, EventArgs e) {
-            bot.changeDifficulty(Bot.Difficulty.Medium);
+            if (mediumRadioButton.Checked) bot.changeDifficulty(Bot.Difficulty.Medium);
         }
 
         private void easyRadioButton_CheckedChanged(object sender, EventArgs e) {
-            bot.changeDifficulty(Bot.Difficulty.Easy);
+            if (easyRadioButton.Checked) bot.changeDifficulty(Bot.Difficulty.Easy);
+        }
+
+        private void radioButtonPlayerVsBot_CheckedChanged(object sender, EventArgs e) {
+            if (radioButtonPvB.Checked) {
+                gameOverLabel.Visible = false;
+                game.PlayerVsBot();
+            }
+        }
+
+        private void radioButtonPlayerVsPlayer_CheckedChanged(object sender, EventArgs e) {
+            if (radioButtonPvP.Checked) {
+                gameOverLabel.Visible = false;
+                game.PlayerVsPlayer();
+            }
         }
     }   
 }

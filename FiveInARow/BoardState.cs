@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Gomoku {
 
     public enum CellContent {
-        Empty, Player, Bot
+        Empty, X, O
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ namespace Gomoku {
         /// </summary>
         public List<BoardState> AdjacentChildren() {
             List<BoardState> children = new List<BoardState>();
-            CellContent next = LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
+            CellContent next = LastMove.Who == CellContent.O ? CellContent.X : CellContent.O;
 
             for (int i = 0; i < Size; i++) {
                 for (int j = 0; j < Size; j++) {
