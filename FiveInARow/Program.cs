@@ -17,8 +17,9 @@ namespace Gomoku {
             Application.SetCompatibleTextRenderingDefault(false);
 
 
-            BoardState board = new BoardState();
-            Game game = new Game(board);
+            BoardState board = new BoardState(15, 5);
+            Bot bot = new Bot(3);
+            Game game = new Game(board, bot);
             GameForm.ColorSettings colorSettings = new GameForm.ColorSettings() {
                 EmptyBrush = Brushes.LightGray,
                 PlayerPen = new Pen(Brushes.Red, 2),
@@ -27,7 +28,7 @@ namespace Gomoku {
                 LastMove = Brushes.LightYellow
 
             };
-            GameForm gameForm = new GameForm(board, game, colorSettings);
+            GameForm gameForm = new GameForm(board, game, bot, colorSettings);
             board.Changed += gameForm.OnBoardChanged;
             game.GameOver += gameForm.OnGameOver;
 

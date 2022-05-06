@@ -10,9 +10,22 @@ namespace Gomoku {
     /// <summary>
     /// How long a line of equal symbols is and from how many ends (0, 1 or 2) it is blocked by opponent's symbol or edge of the board.
     /// </summary>
-    public class LineParams {
-        public int Length = 1;
-        public int OpenEnds = 2;
+    public struct LineParams {
+        public LineParams(int length, int openEnds) {
+            Length = length;
+            OpenEnds = openEnds;
+        }
+        public int Length { get; set; }
+        public int OpenEnds { get; set; }
+    }
+
+    public struct Position {
+        public Position(int x, int y) {
+            X = x;
+            Y = y;
+        }
+        public int X { get; set; }
+        public int Y { get; set; }
     }
 
     /// <summary>
@@ -20,26 +33,28 @@ namespace Gomoku {
     /// Contains each cell's content, who's turn it is and where is the last move.
     /// </summary>
     public class BoardState : ICloneable{
-        public BoardState() {
+        public BoardState(int boardSize, int winnerLineLength) {
+            Size = boardSize;
+            WinnerLineLength = winnerLineLength;
             board = new CellContent[Size, Size];
-            LastMove = (0, 0, CellContent.Empty);
+            LastMove = (new Position(0, 0), CellContent.Empty);
             Changed();
         }
         private CellContent[,] board;
         private int fullCellCount = 0;
-        public (int X, int Y, CellContent Who) LastMove { get; private set; }
+        public (Position Position, CellContent Who) LastMove { get; private set; }
         public event Action Changed = delegate { };
-        public int Size { get => 15; }
-        public int WinnerLineLength { get => 5; }
+        public int Size { get; }
+        public int WinnerLineLength { get; }
 
-        public void SetCell(int x, int y, CellContent content) {
-            if (board[x, y] == CellContent.Empty && content != CellContent.Empty)
+        public void SetCell(Position position, CellContent content) {
+            if (board[position.X, position.Y] == CellContent.Empty && content != CellContent.Empty)
                 fullCellCount += 1;
-            if (board[x, y] != CellContent.Empty && content == CellContent.Empty)
+            if (board[position.X, position.Y] != CellContent.Empty && content == CellContent.Empty)
                 fullCellCount -= 1;
 
-            board[x, y] = content;
-            LastMove = (x, y, content);
+            board[position.X, position.Y] = content;
+            LastMove = (position, content);
        
             Changed();
         }
@@ -48,16 +63,16 @@ namespace Gomoku {
         /// Given coordinates, returns what is at the position in the board state.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">If the given position is invalid.</exception>
-        public CellContent GetCellsContentAtPosition(int x, int y) {
-            if (!Fits(x, y)) throw new ArgumentOutOfRangeException();
-            return board[x, y];
+        public CellContent GetCellsContentAtPosition(Position position) {
+            if (!Fits(position)) throw new ArgumentOutOfRangeException();
+            return board[position.X, position.Y];
         }
 
         /// <summary>
         /// Tells whether the given position is within board's boundaries.
         /// </summary>
-        public bool Fits(int x, int y) {
-            return (0 <= x && x < Size && 0 <= y && y < Size);
+        public bool Fits(Position position) {
+            return (0 <= position.X && position.X < Size && 0 <= position.Y && position.Y < Size);
         }
 
         /// <summary>
@@ -72,7 +87,7 @@ namespace Gomoku {
         /// </summary>
         public void Reset() {
             board = new CellContent[Size, Size];
-            LastMove = (0, 0, CellContent.Empty);
+            LastMove = (new Position(0,0), CellContent.Empty);
             fullCellCount = 0;
             Changed();
         }
@@ -81,7 +96,7 @@ namespace Gomoku {
         /// Returns a deep copy of the board.
         /// </summary>
         public object Clone() {
-            BoardState result = new BoardState {
+            BoardState result = new BoardState(Size, WinnerLineLength) {
                 board = board.Clone() as CellContent[,],
                 LastMove = LastMove,
                 fullCellCount = fullCellCount
@@ -93,19 +108,22 @@ namespace Gomoku {
         /// Each position is in 4 possible lines of the same symbols - vertical, horizontal and two diagonal lines.
         /// This method finds length and number of open ends each line containing given cell has.
         /// </summary>
-        public LineParams[] CellsLineParams(int x, int y) {
-            CellContent who = GetCellsContentAtPosition(x, y);
+        public LineParams[] CellsLineParams(Position position) {
+            CellContent who = GetCellsContentAtPosition(position);
             LineParams[] lines = new LineParams[4];
             (int X, int Y)[] mask = { (1, 1), (1, -1), (1, 0), (0, 1) };
             for (int m = 0; m < 4; m++) {
-                lines[m] = new LineParams();
-                for (int i = 1; i < WinnerLineLength; i++) {
-                    (int X, int Y) = (x + i * mask[m].X, y + i * mask[m].Y);
-                    if (!Fits(X, Y)) {
+                lines[m] = new LineParams(1, 2);
+                // positive direction
+                for (int offset = 1; offset < WinnerLineLength; offset++) {
+                    Position positionInLine = new Position(
+                        position.X + offset * mask[m].X, 
+                        position.Y + offset * mask[m].Y);
+                    if (!Fits(positionInLine)) {
                         lines[m].OpenEnds -= 1;
                         break;
                     }
-                    CellContent cell = GetCellsContentAtPosition(X, Y);
+                    CellContent cell = GetCellsContentAtPosition(positionInLine);
                     if (cell == CellContent.Empty) {
                         break;
                     }
@@ -115,13 +133,14 @@ namespace Gomoku {
                     }
                     lines[m].Length += 1;
                 }
-                for (int i = 1; i < WinnerLineLength; i++) {
-                    (int X, int Y) position = (x - i * mask[m].X, y - i * mask[m].Y);
-                    if (!Fits(position.X, position.Y)) {
+                // negative direction
+                for (int offset = 1; offset < WinnerLineLength; offset++) {
+                    Position positionInLine = new Position(position.X - offset * mask[m].X, position.Y - offset * mask[m].Y);
+                    if (!Fits(positionInLine)) {
                         lines[m].OpenEnds -= 1;
                         break;
                     }
-                    CellContent cell = GetCellsContentAtPosition(position.X, position.Y);
+                    CellContent cell = GetCellsContentAtPosition(positionInLine);
                     if (cell == CellContent.Empty) {
                         break;
                     }
@@ -145,9 +164,10 @@ namespace Gomoku {
 
             for (int i = 0; i < Size; i++) {
                 for (int j = 0; j < Size; j++) {
-                    if (GetCellsContentAtPosition(i, j) == CellContent.Empty && HasCellAnyNeighbor(i, j)) {
+                    Position position = new Position(i, j);
+                    if (GetCellsContentAtPosition(position) == CellContent.Empty && HasCellAnyNeighbor(position)) {
                         BoardState child = Clone() as BoardState;
-                        child.SetCell(i, j, next);
+                        child.SetCell(position, next);
                         children.Add(child);
                     }
                 }
@@ -159,12 +179,11 @@ namespace Gomoku {
         /// <summary>
         /// Tells whether any of cell's neighboring cells is not empty.
         /// </summary>
-        private bool HasCellAnyNeighbor(int x, int y) {
+        private bool HasCellAnyNeighbor(Position position) {
             (int X, int Y)[] mask = { (0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1) };
             foreach (var (X, Y) in mask) {
-                int newX = x + X;
-                int newY = y + Y;
-                if (Fits(newX, newY) && GetCellsContentAtPosition(newX, newY) != CellContent.Empty) {
+                Position newPosition = new Position(position.X + X, position.Y + Y);
+                if (Fits(newPosition) && GetCellsContentAtPosition(newPosition) != CellContent.Empty) {
                     return true;
                 }
             }

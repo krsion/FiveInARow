@@ -15,14 +15,18 @@ namespace Gomoku {
 
         private BoardState board;
         private Game game;
+        private Bot bot;
         private ColorSettings colorSettings;
 
-        public GameForm(BoardState board, Game game, ColorSettings colorSettings) {
+        public GameForm(BoardState board, Game game, Bot bot, ColorSettings colorSettings) {
             InitializeComponent();
             this.board = board;
             this.game = game;
+            this.bot = bot;
             this.colorSettings = colorSettings;
         }
+
+
         /// <summary>
         /// Rendering of the board
         /// </summary>
@@ -37,23 +41,25 @@ namespace Gomoku {
             Graphics graphics = e.Graphics;
             for (int i = 0; i < board.Size; i++) {
                 for (int j = 0; j < board.Size; j++) {
+                    Position position = new Position(i, j);
                     // calculating coordinates of the cell
                     int left = i * (cellWidth + 1);
                     int right = left + cellWidth;
                     int top = j * (cellHeight + 1);
                     int bottom = top + cellHeight;
 
-                    // drawing empty cell
                     Rectangle rectangle = new Rectangle(left, top, cellWidth, cellHeight);
+
+                    // drawing empty cell
                     graphics.DrawRectangle(colorSettings.CellBorderPen, rectangle);
                     graphics.FillRectangle(colorSettings.EmptyBrush, rectangle);
 
                     // highlighting last move
-                    if (i == board.LastMove.X && j == board.LastMove.Y && board.LastMove.Who != CellContent.Empty) {
+                    if (i == board.LastMove.Position.X && j == board.LastMove.Position.Y && board.LastMove.Who != CellContent.Empty) {
                         graphics.FillRectangle(colorSettings.LastMove, rectangle);
                     }
                     // drawing cells content
-                    CellContent cellContent = board.GetCellsContentAtPosition(i, j);
+                    CellContent cellContent = board.GetCellsContentAtPosition(position);
                     if (cellContent == CellContent.Player) { // player has a cross
                         graphics.DrawLine(colorSettings.PlayerPen, left, top, right, bottom);
                         graphics.DrawLine(colorSettings.PlayerPen, left, bottom, right, top);
@@ -71,6 +77,7 @@ namespace Gomoku {
 
         public void OnGameOver() {
             gameOverLabel.Visible = true;
+            Cursor = Cursors.Arrow;
         }
 
         private void boardPictureBox_MouseClick(object sender, MouseEventArgs e) {
@@ -79,12 +86,24 @@ namespace Gomoku {
             int cellHeight = (pictureBox.Height / board.Size) + 1;
             int x = e.X / cellWidth;
             int y = e.Y / cellHeight;
-            game.PlayerMove(x, y);
+            game.PlayerMove(new Position(x, y));
         }
 
         private void resetButton_Click(object sender, EventArgs e) {
             game.Reset();
             gameOverLabel.Visible = false;
+        }
+
+        private void hardRadioButton_CheckedChanged(object sender, EventArgs e) {
+            bot.changeDifficulty(Bot.Difficulty.Hard);
+        }
+
+        private void mediumRadioButton_CheckedChanged(object sender, EventArgs e) {
+            bot.changeDifficulty(Bot.Difficulty.Medium);
+        }
+
+        private void easyRadioButton_CheckedChanged(object sender, EventArgs e) {
+            bot.changeDifficulty(Bot.Difficulty.Easy);
         }
     }   
 }

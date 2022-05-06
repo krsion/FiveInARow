@@ -11,30 +11,59 @@ namespace Gomoku {
     /// <summary>
     /// Artificial Intelligence for playing Gomoku.
     /// </summary>
-    class Bot {
+    public class Bot {
+        public enum Difficulty {
+            Easy, Medium, Hard
+        }
+
+        public void changeDifficulty(Bot.Difficulty difficulty) {
+            switch (difficulty) {
+                case Difficulty.Easy:
+                    depthOfSearch = 1;
+                    break;
+                case Difficulty.Medium:
+                    depthOfSearch = 2;
+                    break;
+                case Difficulty.Hard:
+                    depthOfSearch = 3;
+                    break;
+                default:
+                    depthOfSearch = 0;
+                    break;
+            }
+
+        }
+
+        private int depthOfSearch;
+        public Bot(int depthOfSearch) {
+            this.depthOfSearch = depthOfSearch;
+        }
+
+
         /// <summary>
         /// Given the state of the game, calculates which move would be best for the bot to win and returns the coordinates where the bot wants to place it's symbol. 
         /// </summary>
         /// <param name="board">To which board to add bot's symbol</param>
         /// <returns>Returns coordianates where bot wants to place it's symbol</returns>
-        public static (int,int) Move(BoardState board) {
+        public Position Move(BoardState board) {
             var children = board.AdjacentChildren();
+            // first move in the middle
             if (children.Count == 0) {
-                return (board.Size / 2, board.Size / 2);
+                return new Position(board.Size / 2, board.Size / 2);
             }
 
             var bestMove = board.LastMove;
             var bestEvaluation = Evaluation.Loss;
 
             foreach (BoardState child in children) {
-                var eval = Minimax(child, 3, false, Evaluation.Loss, Evaluation.Win);
+                var eval = Minimax(child, depthOfSearch, false, Evaluation.Loss, Evaluation.Win);
                 if (eval >= bestEvaluation) {
                     bestEvaluation = eval;
-                    bestMove.X = child.LastMove.X;
-                    bestMove.Y = child.LastMove.Y;
+                    bestMove.Position.X = child.LastMove.Position.X;
+                    bestMove.Position.Y = child.LastMove.Position.Y;
                 }
             }
-            return (bestMove.X, bestMove.Y);
+            return bestMove.Position;
         }
 
         /// <summary>
@@ -46,9 +75,9 @@ namespace Gomoku {
         /// <param name="alpha">Minimum guaranteed score of the maximizing player. If greater than beta, no need to search anymore.</param>
         /// <param name="beta">Maximum guaranteed score of the minimizing player. If smaller than alpha, no need to search anymore.</param>
         /// <returns>If maxing, returns the highest reachable evaluation. If not maxing, returns the lowest reachable evaluation.</returns>
-        private static int Minimax(BoardState board, int depth, bool maximizingPlayer, int alpha, int beta) {
+        private int Minimax(BoardState board, int depth, bool maximizingPlayer, int alpha, int beta) {
             if (board.LastMove.Who != CellContent.Empty) {
-                int cellEval = EvaluateCell(board, board.LastMove.X, board.LastMove.Y);
+                int cellEval = EvaluateCell(board, board.LastMove.Position);
                 if (cellEval == Evaluation.Loss || cellEval == Evaluation.Win) {
                     return cellEval;
                 }
@@ -87,18 +116,20 @@ namespace Gomoku {
         /// </summary>
         /// <param name="board">Gomoku board state to evaluate</param>
         /// <returns>Returns evaluation of given game state.</returns>
-        private static int EvaluateBoard(BoardState board) {
+        private int EvaluateBoard(BoardState board) {
             int evaluation = 0;
 
             for (int i = 0; i < board.Size; i++)
-                for (int j = 0; j < board.Size; j++)
-                    if (board.GetCellsContentAtPosition(i, j) != CellContent.Empty) {
-                        int cellEvaluation = EvaluateCell(board, i, j);
+                for (int j = 0; j < board.Size; j++) {
+                    Position position = new Position(i, j);
+                    if (board.GetCellsContentAtPosition(position) != CellContent.Empty) {
+                        int cellEvaluation = EvaluateCell(board, position);
                         if (cellEvaluation == Evaluation.Loss || cellEvaluation == Evaluation.Win) {
                             return cellEvaluation;
                         }
                         evaluation += cellEvaluation;
                     }
+                }
             return evaluation;
         }
 
@@ -109,13 +140,13 @@ namespace Gomoku {
         /// <param name="x">X coordinate of the evaluated position</param>
         /// <param name="y">Y coordinate of the evaluated position</param>
         /// <returns>How much given position contributes to bot winning (or losing, if negative)</returns>
-        private static int EvaluateCell(BoardState board, int x, int y) {
-            CellContent whoseLine = board.GetCellsContentAtPosition(x, y);
+        private int EvaluateCell(BoardState board, Position position) {
+            CellContent whoseLine = board.GetCellsContentAtPosition(position);
             CellContent next = board.LastMove.Who == CellContent.Bot ? CellContent.Player : CellContent.Bot;
 
             int evaluation = 0;
 
-            LineParams[] cellsLineParams = board.CellsLineParams(x, y);
+            LineParams[] cellsLineParams = board.CellsLineParams(position);
             foreach (LineParams lineParams in cellsLineParams) {
                 int length = lineParams.Length;
                 int openEnds = lineParams.OpenEnds;
