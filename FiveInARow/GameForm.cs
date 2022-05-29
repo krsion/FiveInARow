@@ -11,6 +11,8 @@ namespace Gomoku {
             public Pen PlayerOPen { get; set; }
             public Pen CellBorderPen { get; set; }
             public Brush LastMove { get; set; }
+            public Color XWinsColor { get; set; }
+            public Color OWinsColor { get; set; }
         }
 
         private BoardState board;
@@ -32,7 +34,7 @@ namespace Gomoku {
         /// </summary>
         private void boardPictureBox_Paint(object sender, PaintEventArgs e) {
             // setting up cursor
-            if (board.LastMove.Who == CellContent.X && radioButtonPvB.Checked) Cursor = Cursors.WaitCursor;
+            if (board.LastMove.Who == CellContent.PlayerX && radioButtonPvB.Checked) Cursor = Cursors.WaitCursor;
             else Cursor = Cursors.Arrow;
 
             PictureBox pictureBox = sender as PictureBox;
@@ -60,11 +62,11 @@ namespace Gomoku {
                     }
                     // drawing cells content
                     CellContent cellContent = board.GetCellsContentAtPosition(position);
-                    if (cellContent == CellContent.X) { // player has a cross
+                    if (cellContent == CellContent.PlayerX) { // player has a cross
                         graphics.DrawLine(colorSettings.PlayerXPen, left, top, right, bottom);
                         graphics.DrawLine(colorSettings.PlayerXPen, left, bottom, right, top);
                     }
-                    if (cellContent == CellContent.O) { // bot has a circle
+                    if (cellContent == CellContent.PlayerO) { // bot has a circle
                         graphics.DrawEllipse(colorSettings.PlayerOPen, rectangle);
                     }
                     
@@ -75,8 +77,20 @@ namespace Gomoku {
             boardPictureBox_Paint(boardPictureBox, new PaintEventArgs(boardPictureBox.CreateGraphics(), new Rectangle()));
         }
 
-        public void OnGameOver() {
+        public void OnGameOver(CellContent cellContent) {
             gameOverLabel.Visible = true;
+            if (cellContent == CellContent.PlayerO) {
+                gameOverLabel.BackColor = colorSettings.OWinsColor;
+                gameOverLabel.Text = "Game Over\nO Wins";
+            }
+            else if (cellContent == CellContent.PlayerX) {
+                gameOverLabel.BackColor = colorSettings.XWinsColor;
+                gameOverLabel.Text = "Game Over\nX Wins";
+            }
+            else {
+                gameOverLabel.BackColor = Color.LightYellow;
+                gameOverLabel.Text = "Game Over\nTie";
+            }
             Cursor = Cursors.Arrow;
         }
 
@@ -109,15 +123,19 @@ namespace Gomoku {
         private void radioButtonPlayerVsBot_CheckedChanged(object sender, EventArgs e) {
             if (radioButtonPvB.Checked) {
                 gameOverLabel.Visible = false;
-                game.PlayerVsBot();
+                game.SetPlayerVsBotMode();
             }
         }
 
         private void radioButtonPlayerVsPlayer_CheckedChanged(object sender, EventArgs e) {
             if (radioButtonPvP.Checked) {
                 gameOverLabel.Visible = false;
-                game.PlayerVsPlayer();
+                game.SetPlayerVsPlayerMode();
             }
+        }
+
+        private void gameOverLabel_Click(object sender, EventArgs e) {
+
         }
     }   
 }

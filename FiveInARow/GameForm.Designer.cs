@@ -55,24 +55,26 @@ namespace Gomoku {
             this.tableLayoutPanel.Controls.Add(this.panel2, 1, 1);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 4;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 162F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 184F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 202F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 230F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1227, 756);
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1534, 945);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // resetButton
             // 
             this.resetButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resetButton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.resetButton.Location = new System.Drawing.Point(984, 3);
+            this.resetButton.Location = new System.Drawing.Point(1231, 4);
+            this.resetButton.Margin = new System.Windows.Forms.Padding(4);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(240, 76);
+            this.resetButton.Size = new System.Drawing.Size(299, 94);
             this.resetButton.TabIndex = 0;
             this.resetButton.Text = "RESET";
             this.resetButton.UseVisualStyleBackColor = true;
@@ -81,10 +83,11 @@ namespace Gomoku {
             // boardPictureBox
             // 
             this.boardPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.boardPictureBox.Location = new System.Drawing.Point(3, 3);
+            this.boardPictureBox.Location = new System.Drawing.Point(4, 4);
+            this.boardPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.boardPictureBox.Name = "boardPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.boardPictureBox, 4);
-            this.boardPictureBox.Size = new System.Drawing.Size(975, 750);
+            this.boardPictureBox.Size = new System.Drawing.Size(1219, 937);
             this.boardPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.boardPictureBox.TabIndex = 1;
             this.boardPictureBox.TabStop = false;
@@ -98,13 +101,15 @@ namespace Gomoku {
             this.gameOverLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gameOverLabel.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.gameOverLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.gameOverLabel.Location = new System.Drawing.Point(984, 428);
+            this.gameOverLabel.Location = new System.Drawing.Point(1231, 534);
+            this.gameOverLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.gameOverLabel.Name = "gameOverLabel";
-            this.gameOverLabel.Size = new System.Drawing.Size(240, 328);
+            this.gameOverLabel.Size = new System.Drawing.Size(299, 411);
             this.gameOverLabel.TabIndex = 2;
             this.gameOverLabel.Text = "GAME OVER";
             this.gameOverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.gameOverLabel.Visible = false;
+            this.gameOverLabel.Click += new System.EventHandler(this.gameOverLabel_Click);
             // 
             // panel1
             // 
@@ -114,20 +119,20 @@ namespace Gomoku {
             this.panel1.Controls.Add(this.easyRadioButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.panel1.Location = new System.Drawing.Point(984, 247);
+            this.panel1.Location = new System.Drawing.Point(1231, 308);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(240, 178);
+            this.panel1.Size = new System.Drawing.Size(299, 222);
             this.panel1.TabIndex = 4;
             // 
             // hardRadioButton
             // 
             this.hardRadioButton.AutoSize = true;
-            this.hardRadioButton.Checked = true;
-            this.hardRadioButton.Location = new System.Drawing.Point(26, 129);
+            this.hardRadioButton.Location = new System.Drawing.Point(32, 161);
+            this.hardRadioButton.Margin = new System.Windows.Forms.Padding(4);
             this.hardRadioButton.Name = "hardRadioButton";
-            this.hardRadioButton.Size = new System.Drawing.Size(88, 35);
+            this.hardRadioButton.Size = new System.Drawing.Size(106, 42);
             this.hardRadioButton.TabIndex = 3;
-            this.hardRadioButton.TabStop = true;
             this.hardRadioButton.Text = "Hard";
             this.hardRadioButton.UseVisualStyleBackColor = true;
             this.hardRadioButton.CheckedChanged += new System.EventHandler(this.hardRadioButton_CheckedChanged);
@@ -135,18 +140,20 @@ namespace Gomoku {
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 13);
+            this.label1.Location = new System.Drawing.Point(10, 16);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 31);
+            this.label1.Size = new System.Drawing.Size(140, 38);
             this.label1.TabIndex = 0;
             this.label1.Text = "Difficulty";
             // 
             // mediumRadioButton
             // 
             this.mediumRadioButton.AutoSize = true;
-            this.mediumRadioButton.Location = new System.Drawing.Point(26, 88);
+            this.mediumRadioButton.Location = new System.Drawing.Point(32, 110);
+            this.mediumRadioButton.Margin = new System.Windows.Forms.Padding(4);
             this.mediumRadioButton.Name = "mediumRadioButton";
-            this.mediumRadioButton.Size = new System.Drawing.Size(125, 35);
+            this.mediumRadioButton.Size = new System.Drawing.Size(152, 42);
             this.mediumRadioButton.TabIndex = 1;
             this.mediumRadioButton.Text = "Medium";
             this.mediumRadioButton.UseVisualStyleBackColor = true;
@@ -155,10 +162,13 @@ namespace Gomoku {
             // easyRadioButton
             // 
             this.easyRadioButton.AutoSize = true;
-            this.easyRadioButton.Location = new System.Drawing.Point(26, 47);
+            this.easyRadioButton.Checked = true;
+            this.easyRadioButton.Location = new System.Drawing.Point(32, 59);
+            this.easyRadioButton.Margin = new System.Windows.Forms.Padding(4);
             this.easyRadioButton.Name = "easyRadioButton";
-            this.easyRadioButton.Size = new System.Drawing.Size(81, 35);
+            this.easyRadioButton.Size = new System.Drawing.Size(99, 42);
             this.easyRadioButton.TabIndex = 2;
+            this.easyRadioButton.TabStop = true;
             this.easyRadioButton.Text = "Easy";
             this.easyRadioButton.UseVisualStyleBackColor = true;
             this.easyRadioButton.CheckedChanged += new System.EventHandler(this.easyRadioButton_CheckedChanged);
@@ -170,17 +180,19 @@ namespace Gomoku {
             this.panel2.Controls.Add(this.label2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.panel2.Location = new System.Drawing.Point(984, 85);
+            this.panel2.Location = new System.Drawing.Point(1231, 106);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(240, 156);
+            this.panel2.Size = new System.Drawing.Size(299, 194);
             this.panel2.TabIndex = 5;
             // 
             // radioButtonPvP
             // 
             this.radioButtonPvP.AutoSize = true;
-            this.radioButtonPvP.Location = new System.Drawing.Point(26, 90);
+            this.radioButtonPvP.Location = new System.Drawing.Point(32, 112);
+            this.radioButtonPvP.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonPvP.Name = "radioButtonPvP";
-            this.radioButtonPvP.Size = new System.Drawing.Size(201, 35);
+            this.radioButtonPvP.Size = new System.Drawing.Size(247, 42);
             this.radioButtonPvP.TabIndex = 2;
             this.radioButtonPvP.Text = "Player vs Player";
             this.radioButtonPvP.UseVisualStyleBackColor = true;
@@ -190,9 +202,10 @@ namespace Gomoku {
             // 
             this.radioButtonPvB.AutoSize = true;
             this.radioButtonPvB.Checked = true;
-            this.radioButtonPvB.Location = new System.Drawing.Point(26, 49);
+            this.radioButtonPvB.Location = new System.Drawing.Point(32, 61);
+            this.radioButtonPvB.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonPvB.Name = "radioButtonPvB";
-            this.radioButtonPvB.Size = new System.Drawing.Size(173, 35);
+            this.radioButtonPvB.Size = new System.Drawing.Size(212, 42);
             this.radioButtonPvB.TabIndex = 1;
             this.radioButtonPvB.TabStop = true;
             this.radioButtonPvB.Text = "Player vs Bot";
@@ -202,18 +215,20 @@ namespace Gomoku {
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 15);
+            this.label2.Location = new System.Drawing.Point(21, 19);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 31);
+            this.label2.Size = new System.Drawing.Size(93, 38);
             this.label2.TabIndex = 0;
             this.label2.Text = "Mode";
             // 
             // GameForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1227, 756);
+            this.ClientSize = new System.Drawing.Size(1534, 945);
             this.Controls.Add(this.tableLayoutPanel);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "GameForm";
             this.Text = "Five in a Row";
             this.tableLayoutPanel.ResumeLayout(false);

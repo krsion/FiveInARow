@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("FiveInARowTests")]
 namespace Gomoku {
 
     public enum CellContent {
-        Empty, X, O
+        Empty, PlayerX, PlayerO
     }
 
     /// <summary>
@@ -47,7 +49,8 @@ namespace Gomoku {
         public int Size { get; }
         public int WinnerLineLength { get; }
 
-        public void SetCell(Position position, CellContent content) {
+        public void SetCellsContentAtPosition(Position position, CellContent content) {
+            if (!Fits(position)) throw new ArgumentOutOfRangeException();
             if (board[position.X, position.Y] == CellContent.Empty && content != CellContent.Empty)
                 fullCellCount += 1;
             if (board[position.X, position.Y] != CellContent.Empty && content == CellContent.Empty)
@@ -107,6 +110,7 @@ namespace Gomoku {
         /// <summary>
         /// Each position is in 4 possible lines of the same symbols - vertical, horizontal and two diagonal lines.
         /// This method finds length and number of open ends each line containing given cell has.
+        /// Ordering of line parameters is: (diagonal descending, diagonal ascending, vertical, horizontal)
         /// </summary>
         public LineParams[] CellsLineParams(Position position) {
             CellContent who = GetCellsContentAtPosition(position);
@@ -160,14 +164,14 @@ namespace Gomoku {
         /// </summary>
         public List<BoardState> AdjacentChildren() {
             List<BoardState> children = new List<BoardState>();
-            CellContent next = LastMove.Who == CellContent.O ? CellContent.X : CellContent.O;
+            CellContent next = LastMove.Who == CellContent.PlayerO ? CellContent.PlayerX : CellContent.PlayerO;
 
             for (int i = 0; i < Size; i++) {
                 for (int j = 0; j < Size; j++) {
                     Position position = new Position(i, j);
                     if (GetCellsContentAtPosition(position) == CellContent.Empty && HasCellAnyNeighbor(position)) {
                         BoardState child = Clone() as BoardState;
-                        child.SetCell(position, next);
+                        child.SetCellsContentAtPosition(position, next);
                         children.Add(child);
                     }
                 }

@@ -18,14 +18,16 @@ namespace Gomoku {
 
 
             BoardState board = new BoardState(15, 5);
-            Bot bot = new Bot(3);
+            Bot bot = new Bot(Bot.Difficulty.Easy);
             Game game = new Game(board, bot);
             GameForm.ColorSettings colorSettings = new GameForm.ColorSettings() {
                 EmptyBrush = Brushes.LightGray,
-                PlayerXPen = new Pen(Brushes.Red, 2),
-                PlayerOPen = new Pen(Brushes.Blue, 2),
+                PlayerXPen = new Pen(Brushes.Blue, 2),
+                PlayerOPen = new Pen(Brushes.Red, 2),
                 CellBorderPen = Pens.Black,
-                LastMove = Brushes.LightYellow
+                LastMove = Brushes.LightYellow,
+                XWinsColor = Color.LightBlue,
+                OWinsColor = Color.LightCoral
 
             };
             GameForm gameForm = new GameForm(board, game, bot, colorSettings);

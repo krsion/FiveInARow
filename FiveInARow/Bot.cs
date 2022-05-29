@@ -35,8 +35,8 @@ namespace Gomoku {
         }
 
         private int depthOfSearch;
-        public Bot(int depthOfSearch) {
-            this.depthOfSearch = depthOfSearch;
+        public Bot(Difficulty difficulty) {
+            changeDifficulty(difficulty);
         }
 
 
@@ -142,7 +142,7 @@ namespace Gomoku {
         /// <returns>How much given position contributes to bot winning (or losing, if negative)</returns>
         private int EvaluateCell(BoardState board, Position position) {
             CellContent whoseLine = board.GetCellsContentAtPosition(position);
-            CellContent next = board.LastMove.Who == CellContent.O ? CellContent.X : CellContent.O;
+            CellContent next = board.LastMove.Who == CellContent.PlayerO ? CellContent.PlayerX : CellContent.PlayerO;
 
             int evaluation = 0;
 
@@ -152,12 +152,12 @@ namespace Gomoku {
                 int openEnds = lineParams.OpenEnds;
                 bool nextIsNotWhoseLineWins = (length == 5) || (length == 4 && openEnds == 2);
                 bool nextIsWhoseLineWins = nextIsNotWhoseLineWins || (length == 4 && openEnds == 1) || (length == 3 && openEnds == 2);
-                if (next == CellContent.X && whoseLine == CellContent.O && nextIsNotWhoseLineWins) return Evaluation.Win;
-                if (next == CellContent.X && whoseLine == CellContent.X && nextIsWhoseLineWins) return Evaluation.Loss;
-                if (next == CellContent.O && whoseLine == CellContent.O && nextIsWhoseLineWins) return Evaluation.Win;
-                if (next == CellContent.O && whoseLine == CellContent.X && nextIsNotWhoseLineWins) return Evaluation.Loss;
+                if (next == CellContent.PlayerX && whoseLine == CellContent.PlayerO && nextIsNotWhoseLineWins) return Evaluation.Win;
+                if (next == CellContent.PlayerX && whoseLine == CellContent.PlayerX && nextIsWhoseLineWins) return Evaluation.Loss;
+                if (next == CellContent.PlayerO && whoseLine == CellContent.PlayerO && nextIsWhoseLineWins) return Evaluation.Win;
+                if (next == CellContent.PlayerO && whoseLine == CellContent.PlayerX && nextIsNotWhoseLineWins) return Evaluation.Loss;
 
-                int coefficient = next == CellContent.O ? 1 : -1;
+                int coefficient = next == CellContent.PlayerO ? 1 : -1;
                 evaluation += (int)Math.Pow(2, length*openEnds) * coefficient;
 
             }
