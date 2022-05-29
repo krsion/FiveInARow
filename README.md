@@ -4,8 +4,9 @@
 - Five In a Row is also called [Gomoku](https://en.wikipedia.org/wiki/Gomoku)
 - This is the freestyle version - winning line can be longer than 5
 - Player has blue crosses, Bot has red circles
+- Player Vs Player also possible
 - To make a move, click on an empty cell
-- After game over, you can click "RESET" for new game and now will start the party that didn't start last time
+- After game over, you can click "RESET" and the one who didn't start last game will start now.
 
 ## Developer Big Picture Documentation
 This project uses the MVC Architecture and Events
@@ -22,15 +23,9 @@ This project uses the MVC Architecture and Events
 ![Class Diagram](ClassDiagram1.png)
 
 ## How the Bot works
-It is Minimax algorithm using [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning).
-### Evaluation function
-It can evaluate a state of the board to be 
-- *Good* - Bot must win
-- *Bad* - Bot must lose
-- *Neutral* - no one can win in the next move
+It is Minimax algorithm using alpha-beta pruning.
 
-Board's evaluation is based on each cell's evaluation. If every cell is evaluated Neutral, whole board is evaluated Neutral.
-If one cell is evaluated differently, board gets its evaluation and the function immediately returns it.
+Board's evaluation is based on each cell's evaluation.
 
 Cell's evaluation is based on the lines it is contained in. (line = sequence of cells of the same non empty type)
 All factors are:
