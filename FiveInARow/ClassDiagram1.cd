@@ -1,60 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access">
-  <Class Name="FiveInARow.LineParams">
-    <Position X="2.5" Y="3.75" Width="1.5" />
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Gomoku.BoardState" BaseTypeListCollapsed="true">
+    <Position X="4.25" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Board.cs</FileName>
+      <HashCode>AAQAAABAAAIAhCAABgAAAAAAQAIAEAAIIABAAAAAABA=</HashCode>
+      <FileName>BoardState.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="FiveInARow.Board" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="1.75" Width="1.75" />
+  <Class Name="Gomoku.Evaluation">
+    <Position X="6" Y="10.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAQEAAAAAAAAhAAABAAAAAAAQAIAEBAIIABAAAEAABA=</HashCode>
-      <FileName>Board.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.217" Collapsed="true" />
-  </Class>
-  <Class Name="FiveInARow.Bot">
-    <Position X="2.5" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAQAAIAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAAAAAAAEAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
       <FileName>Bot.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FiveInARow.Game">
-    <Position X="6.25" Y="1.75" Width="1.5" />
+  <Class Name="Gomoku.Bot">
+    <Position X="6" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Gomoku.Bot.Difficulty" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Bot.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAgAAAAAAABAAAAEAAAAAAAAAAgAAAIDAAAAAAQAA=</HashCode>
+      <HashCode>AAAAAAQAAIAAAAAAAAAAIAAAAACAAAAQAAAAAQAAAAA=</HashCode>
+      <FileName>Bot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gomoku.Game">
+    <Position X="2.5" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABgAAAAIAABAAAAEAAAgAAAAAAAAAIIJAAAAAAgAA=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FiveInARow.GameForm">
-    <Position X="8" Y="1.75" Width="2.25" />
+  <Class Name="Gomoku.GameForm">
+    <Position X="0.75" Y="8.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Gomoku.GameForm.ColorSettings" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GameForm.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IAQAAAAQACAIQqQAAACAAAACAAgAAAQMJAAAQAAAAAA=</HashCode>
+      <HashCode>AAQBAAAQEDAIQrQAAACAAiESAAgAAAQMMAICAQAAAAA=</HashCode>
       <FileName>GameForm.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FiveInARow.Program">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+  <Class Name="Gomoku.Program">
+    <Position X="0.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="FiveInARow.CellContent">
-    <Position X="4.25" Y="1.75" Width="1.5" />
+  <Struct Name="Gomoku.LineParams">
+    <Position X="7.75" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAIAAAAAAAAAAQAAAAA=</HashCode>
-      <FileName>Board.cs</FileName>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BoardState.cs</FileName>
     </TypeIdentifier>
-  </Enum>
-  <Enum Name="FiveInARow.Evaluation">
-    <Position X="4.25" Y="3.25" Width="1.5" />
+  </Struct>
+  <Struct Name="Gomoku.Position">
+    <Position X="7.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAE=</HashCode>
-      <FileName>Bot.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>BoardState.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Gomoku.CellContent">
+    <Position X="2.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAQACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BoardState.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
